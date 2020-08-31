@@ -1,0 +1,143 @@
+<html>
+
+<head>
+<style type="text/css">
+@font-face {font-family: Choumei; src: url(https://raw.githubusercontent.com/ninep9up/sidequest/gh-pages/assets/Choumei.woff2); font-weight: 200; font-style: normal}
+	
+body{background-color: #bdbdbd; font-family: 'Choumei'; color: #413635; text-align: center; transition: all 0.5s}
+rt{ruby-align: center; font-size:1.7vh; color: #5d5d5d; margin-bottom: -0.7vh; -webkit-text-stroke: 0.1vh}
+body.green{color: #325a23; background-color: #b0bd93}
+body.red{color: #7d3326; background-color: #bdb093}
+.tails{display:none !important}
+.untails{display:contents !important}
+a {color: #325a23; text-decoration: none}
+.tip:hover{opacity: 0.75 !important}
+</style>
+</head>
+
+<body>
+<div id="romaji" class="tails" style="margin-top: 17.1vh; font-family: MS Mincho, serif; font-size:5.1vw; -webkit-text-stroke: 0.23vh currentcolor; letter-spacing: 0.15vw;"></div>
+<div id="yomi" style="margin-top: 17.1vh; font-family: MS Mincho, serif; font-size:5.1vw; -webkit-text-stroke: 0.23vh currentcolor; letter-spacing: 0.15vw">きょういくかんじ</div><audio id="sound" src=''></audio>
+<div id="kanj" style="margin-top: -1.25vw; color: #18181d; font-size:12.1vw; -webkit-text-stroke: 0.15vh currentcolor; letter-spacing: -1.1vw">教育漢字</div>
+<div id="draw" style="margin-top: -0.81vw; min-height:2.4vh; font-size:2.4vh; -webkit-text-stroke: 0.11vh">⠀</div>
+<div id="0" style="font-size:4.1vh; -webkit-text-stroke: 0.13vh; display:inline-block; padding-right:5%; padding-left:5%">Press ⇦⇨ to choose, ⇨ to advance, ⇩ to tangorin a word,</div>
+<div id="1" style="font-size:4.1vh; -webkit-text-stroke: 0.13vh; display:inline-block; padding-right:5%; padding-left:5%">⇧ to romaji, hover lows for some random tips</div>
+<div id="just" class="tip" style="padding-top: 61px; padding-bottom: 60px; opacity: 0.0"></div>
+<div id="tip" class="tip" style="color: #18181d; -webkit-text-stroke: 0.1vh; font-size:3.1vh; opacity: 0.0">The 第1学年 corpus includes words starting with 80 Grade 1 kanjis and their occasional synonyms.<br> They were broken into 7 categories: <a href="https://ninep9up.github.io/sidequest/gakunen1/1-human.htm">1/7 Human and occupations</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/2-numbers.htm">2/7 Numbers</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/3-time.htm">3/7 Timely matters</a>,<br> <a href="https://ninep9up.github.io/sidequest/gakunen1/4-outside.htm">4/7 Nature and places</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/5-abstract.htm">5/7 Abstract</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/6-verbs.htm">6/7 Verbs</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/7-common.htm" style="text-decoration:underline">7/7 Common vocabulary</a>.
+
+<script>function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;}}
+
+
+function setit(){if (chosen != 0 && i<w.length){
+document.addEventListener('keydown', function(event){
+
+var pressed = event.key; 
+if (pressed === 'ArrowRight' && chosen != 0) {
+
+current = w[i];
+document.getElementById('romaji').textContent = romaji[current];
+document.getElementById('yomi').textContent = yomi[current];
+document.getElementById('kanj').textContent = kanj[current];
+
+document.body.className = '';
+document.getElementById('0').className = '';
+document.getElementById('1').className = '';
+document.getElementById('draw').textContent = '⠀';
+console.log('Styles stripped');
+	
+tails=[0,1];
+shuffle(tails); 
+
+tip = tips[Math.floor(Math.random() * tips.length)];
+document.getElementById('tip').innerHTML = tip;
+document.getElementById(tails[0]).textContent = desu[current];
+document.getElementById(tails[1]).textContent = janai[current]; console.log('Styles for step '+i+' are set'); kickit()
+}});}
+
+}
+
+		
+function kickit(){chosen = 0;
+
+if(i==w.length){document.getElementById('0').textContent = ''; document.getElementById('tip').textContent = '';
+for (i=0; i<w.length; i++){if (stat[i]!=""){document.getElementById('0').innerHTML+="　<ruby>"+stat[i]+"<rt>"+stat2[i]+"</rt></ruby>&nbsp;"+stat3[i]}};
+document.getElementById('yomi').textContent = 'accuracy'; document.getElementById('romaji').textContent = 'accuracy';
+document.getElementById('kanj').textContent = (parseFloat(right/w.length*100).toFixed(2))+'%';
+document.getElementById('just').innerHTML = "<a href='https://paypal.me/9pgup'><img src='https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg' style='padding-top:8px' width='16px'></a>"}
+
+if (chosen == 0 && i<w.length) {
+	
+	console.log('i='+i); var i2=i;
+	
+	document.getElementById('sound').src='http://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kana='+yomi[w[i]]+'&kanji='+kanj[w[i]]; 
+	console.log(sound); document.getElementById('sound').play();
+	
+	if (desu[current] == janai[current]){
+	document.body.className = 'green'; chosen = 1; 
+	document.getElementById('draw').textContent = "ｌｕｃｋｙ　ｄｒａｗ　";
+	document.getElementById('draw').innerHTML += '<img src="daruma.png" height="20px">';
+	right++; i++; setit();}else{
+	
+	var listener = function(event){
+		var pressed2 = event.key; 
+		
+		if (pressed2 === 'ArrowUp') {temp = document.getElementById('romaji').className; 
+		document.getElementById('romaji').className = document.getElementById('yomi').className;
+		document.getElementById('yomi').className = temp;}
+		
+		if (pressed2 === 'ArrowDown'){window.open('https://tangorin.com/words?search='+yomi[w[i]])}
+	
+		if (pressed2 === 'ArrowLeft' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowLeft' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }}
+
+	document.addEventListener('keydown', listener);
+	}; 
+	
+	}
+	
+	
+	
+	setit();}
+
+var kanj=["入浴","小舟","本","書物","手綱","玉","弾丸","車","上着","人形","出来事","小麦粉","金槌","小刀","字","手紙","文字","印","水差し","小皿","草履","土産","糸","共に","一緒に","口笛","円"];
+var yomi=["にゅうよく","こぶね","ほん","しょもつ","たづな","たま","だんがん","くるま","うわぎ","にんぎょう","できごと","こむぎこ","かなづち","こがたな","じ","てがみ","もじ","しるし","みずさし","こざら","ぞうり","みやげ","いと","ともに","いっしょに","くちぶえ","えん"]
+var desu=["bathing","boat ﾎﾞｰﾄ","book","book","bridle","bullet","bullet","car","coat/jacket","doll","event/incident","flour","hammer ハンマー","knife/penknife ﾅｲﾌ","letter","letter","letter/character","mark/emblem","pitcher","saucer","slippers スリッパ","souvenir","thread","together/both","together/with","whistle","yen"];
+var janai=["bathing","boat ﾎﾞｰﾄ","book","book","bridle","bullet","bullet","car","coat/jacket","doll","event/incident","flour","hammer ハンマー","knife/penknife ﾅｲﾌ","letter","letter","letter/character","mark/emblem","pitcher","saucer","slippers スリッパ","souvenir","thread","together/both","together/with","whistle","yen"]; shuffle(janai);
+var stat=["","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat2=["","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat3=["","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var w=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]; shuffle(w); var i = 0;var tumblr = -1; var right = 0; var chosen = 1; var current; var tails=[0,1];
+
+var romaji=["nyūyoku","kobune","hon","shomotsu","tazuna","tama","dangan","kuruma","uwagi","ningyō","dekigoto","komugiko","kanazuchi","kogatana","ji","tegami","moji","shirushi","mizusashi","kozara","zōri","miyage","ito","tomoni","isshoni","kuchibue","en"];
+
+var tips=["Particle tip#1 ね<br>ね is a particle used after です at the end of a sentence for approval, confirmation or, rarely, denial. <br>It can also be used to emphasize topics. You can also use よね for something not that obvious.","Particle tip#2 か<br>か at the end of ですか is a particle that turns the statement into a question.","Particle tip#3 を<br>を is a particle that indicates that the word that comes right before it is the object of the verb.","Particle tip#4 は, も<br>Use a topic marker は after a word to specify it as a topic of a statement. <br>Either use も to specify its inclusive quality.","Particle tip#5 の<br>の tells that the following word is the attribute of the noun that precedes it. <br>の can also be attached to the end of the phrase to mark it the way 'of' does in English. <br>It is also used after the base word to set the direction in which you locate something ('table's below').","Particle tip#6 が<br>が is a particle used after a word to indicate qualities or states it brings. <br>Attach が to the last word of a sentence to add a 'yeah, but' emphasis.","Particle tip#7 と<br>と is a particle that works like 'and' when listing or 'with' when stating someone you're acting with. <br>You can also use と in a statement to emphasize an object.","Particle tip#8 そして, でも<br>To link two sentences use そして. To link two contradictory statements use でも (but).","Particle tip#9 から, まで<br>から indicates the starting point or a source, as with 'from'. <br>まで refers to the point of arrival, as with 'to' or 'as far as'.","Particle tip#10 で<br>で indicates that a certain something (a place, a time span, people even) is the range <br>with(in) which some action occurs. で after a mode of transportation indicates the method of travel. <br>It can also indicate a method in general ('learn by books', 'say with Japanese') or a reason ('due to').","Particle tip#11 に<br>に indicates the place as if you're closing on it with a statement <br>('I live in Osaka', 'we met at the station').","Particle tip#12 よ<br>Add よ (as with 'you know') to a statement to make it sound more friendly.","Particle tip#13 や, か<br>や is an unstrict 'and' and can be used to list matters, implying these are not all. <br>か on the other hand implies that only one of the listed is gonna result.","Particle tip#14 とか<br>Use とか to name examples (as with 'like').","Particle tip#15 えっ<br>Say えっ to show a surprise."]; var tip;
+
+setit();
+	
+</script>
+</body>
+
+</html>
+

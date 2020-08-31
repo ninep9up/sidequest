@@ -1,0 +1,143 @@
+<html>
+
+<head>
+<style type="text/css">
+@font-face {font-family: Choumei; src: url(https://raw.githubusercontent.com/ninep9up/sidequest/gh-pages/assets/Choumei.woff2); font-weight: 200; font-style: normal}
+	
+body{background-color: #bdbdbd; font-family: 'Choumei'; color: #413635; text-align: center; transition: all 0.5s}
+rt{ruby-align: center; font-size:1.7vh; color: #5d5d5d; margin-bottom: -0.7vh; -webkit-text-stroke: 0.1vh}
+body.green{color: #325a23; background-color: #b0bd93}
+body.red{color: #7d3326; background-color: #bdb093}
+.tails{display:none !important}
+.untails{display:contents !important}
+a {color: #325a23; text-decoration: none}
+.tip:hover{opacity: 0.75 !important}
+</style>
+</head>
+
+<body>
+<div id="romaji" class="tails" style="margin-top: 17.1vh; font-family: MS Mincho, serif; font-size:5.1vw; -webkit-text-stroke: 0.23vh currentcolor; letter-spacing: 0.15vw;"></div>
+<div id="yomi" style="margin-top: 17.1vh; font-family: MS Mincho, serif; font-size:5.1vw; -webkit-text-stroke: 0.23vh currentcolor; letter-spacing: 0.15vw">きょういくかんじ</div><audio id="sound" src=''></audio>
+<div id="kanj" style="margin-top: -1.25vw; color: #18181d; font-size:12.1vw; -webkit-text-stroke: 0.15vh currentcolor; letter-spacing: -1.1vw">教育漢字</div>
+<div id="draw" style="margin-top: -0.81vw; min-height:2.4vh; font-size:2.4vh; -webkit-text-stroke: 0.11vh">⠀</div>
+<div id="0" style="font-size:4.1vh; -webkit-text-stroke: 0.13vh; display:inline-block; padding-right:5%; padding-left:5%">Press ⇦⇨ to choose, ⇨ to advance, ⇩ to tangorin a word,</div>
+<div id="1" style="font-size:4.1vh; -webkit-text-stroke: 0.13vh; display:inline-block; padding-right:5%; padding-left:5%">⇧ to romaji, hover lows for some random tips</div>
+<div id="just" class="tip" style="padding-top: 61px; padding-bottom: 60px; opacity: 0.0"></div>
+<div id="tip" class="tip" style="color: #18181d; -webkit-text-stroke: 0.1vh; font-size:3.1vh; opacity: 0.0">The 第1学年 corpus includes words starting with 80 Grade 1 kanjis and their occasional synonyms.<br> They were broken into 7 categories: <a href="https://ninep9up.github.io/sidequest/gakunen1/1-human.htm">1/7 Human and occupations</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/2-numbers.htm">2/7 Numbers</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/3-time.htm">3/7 Timely matters</a>,<br> <a href="https://ninep9up.github.io/sidequest/gakunen1/4-outside.htm">4/7 Nature and places</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/5-abstract.htm">5/7 Abstract</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/6-verbs.htm" style="text-decoration:underline">6/7 Verbs</a>, <a href="https://ninep9up.github.io/sidequest/gakunen1/7-common.htm">7/7 Common vocabulary</a>.
+
+<script>function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;}}
+
+
+function setit(){if (chosen != 0 && i<w.length){
+document.addEventListener('keydown', function(event){
+
+var pressed = event.key; 
+if (pressed === 'ArrowRight' && chosen != 0) {
+
+current = w[i];
+document.getElementById('romaji').textContent = romaji[current];
+document.getElementById('yomi').textContent = yomi[current];
+document.getElementById('kanj').textContent = kanj[current];
+
+document.body.className = '';
+document.getElementById('0').className = '';
+document.getElementById('1').className = '';
+document.getElementById('draw').textContent = '⠀';
+console.log('Styles stripped');
+	
+tails=[0,1];
+shuffle(tails); 
+
+tip = tips[Math.floor(Math.random() * tips.length)];
+document.getElementById('tip').innerHTML = tip;
+document.getElementById(tails[0]).textContent = desu[current];
+document.getElementById(tails[1]).textContent = janai[current]; console.log('Styles for step '+i+' are set'); kickit()
+}});}
+
+}
+
+		
+function kickit(){chosen = 0;
+
+if(i==w.length){document.getElementById('0').textContent = ''; document.getElementById('tip').textContent = '';
+for (i=0; i<w.length; i++){if (stat[i]!=""){document.getElementById('0').innerHTML+="　<ruby>"+stat[i]+"<rt>"+stat2[i]+"</rt></ruby>&nbsp;"+stat3[i]}};
+document.getElementById('yomi').textContent = 'accuracy'; document.getElementById('romaji').textContent = 'accuracy';
+document.getElementById('kanj').textContent = (parseFloat(right/w.length*100).toFixed(2))+'%';
+document.getElementById('just').innerHTML = "<a href='https://paypal.me/9pgup'><img src='https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg' style='padding-top:8px' width='16px'></a>"}
+
+if (chosen == 0 && i<w.length) {
+	
+	console.log('i='+i); var i2=i;
+	
+	document.getElementById('sound').src='http://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kana='+yomi[w[i]]+'&kanji='+kanj[w[i]]; 
+	console.log(sound); document.getElementById('sound').play();
+	
+	if (desu[current] == janai[current]){
+	document.body.className = 'green'; chosen = 1; 
+	document.getElementById('draw').textContent = "ｌｕｃｋｙ　ｄｒａｗ　";
+	document.getElementById('draw').innerHTML += '<img src="daruma.png" height="20px">';
+	right++; i++; setit();}else{
+	
+	var listener = function(event){
+		var pressed2 = event.key; 
+		
+		if (pressed2 === 'ArrowUp') {temp = document.getElementById('romaji').className; 
+		document.getElementById('romaji').className = document.getElementById('yomi').className;
+		document.getElementById('yomi').className = temp;}
+		
+		if (pressed2 === 'ArrowDown'){window.open('https://tangorin.com/words?search='+yomi[w[i]])}
+	
+		if (pressed2 === 'ArrowLeft' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowLeft' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }}
+
+	document.addEventListener('keydown', listener);
+	}; 
+	
+	}
+	
+	
+	
+	setit();}
+
+var kanj=["上がる","上昇","出来る","生まれる","足りる","見える","生る","空く","下ろす","出る","出発","下る","見つける","入る","見出す","下がる","外出","手渡す","起こる","生ずる","手伝う","出す","学ぶ","習う","入れる","上げる","持ち上げる","生きる","下げる","気付く","気取る","立てる","休む","見る","出かける","示す","見せる","生える","立つ","立ち上がる","見張る"];
+var yomi=["あがる","じょうしょう","できる","うまれる","たりる","みえる","なる","あく","おろす","でる","しゅっぱつ","くだる","みつける","はいる","みいだす","さがる","がいしゅつ","てわたす","おこる","しょうずる","てつだう","だす","まなぶ","ならう","いれる","あげる","もちあげる","いきる","さげる","きづく","きどる","たてる","やすむ","みる","でかける","しめす","みせる","はえる","たつ","たちあがる","みはる"]
+var desu=["ascend/rise 🇻🇮","ascending","be able to do 🇻🇮","be born 🇻🇮","be sufficient 🇻🇮","be visible 🇻🇮","bear fruit 🇻🇮","become vacant 🇻🇮","bring down 🇻🇹","come out 🇻🇮","departure","descend 🇻🇮","discover 🇻🇹","enter 🇻🇮","find 🇻🇹","go down 🇻🇮","going out","hand over 🇻🇹","happen 🇻🇮","happen 🇻🇮","help 🇻🇹","issue 🇻🇹","learn 🇻🇹","learn 🇻🇹","let in 🇻🇹","lift 🇻🇹","lift 🇻🇹","live 🇻🇮","lower 🇻🇹","notice 🇻🇹","put on 🇻🇹","put up/erect 🇻🇹","rest 🇻🇮","see 🇻🇹","set out 🇻🇮","show 🇻🇹","show 🇻🇹","sprout 🇻🇮","stand 🇻🇮","stand up 🇻🇮","watch 🇻🇹"];
+var janai=["ascend/rise 🇻🇮","ascending","be able to do 🇻🇮","be born 🇻🇮","be sufficient 🇻🇮","be visible 🇻🇮","bear fruit 🇻🇮","become vacant 🇻🇮","bring down 🇻🇹","come out 🇻🇮","departure","descend 🇻🇮","discover 🇻🇹","enter 🇻🇮","find 🇻🇹","go down 🇻🇮","going out","hand over 🇻🇹","happen 🇻🇮","happen 🇻🇮","help 🇻🇹","issue 🇻🇹","learn 🇻🇹","learn 🇻🇹","let in 🇻🇹","lift 🇻🇹","lift 🇻🇹","live 🇻🇮","lower 🇻🇹","notice 🇻🇹","put on 🇻🇹","put up/erect 🇻🇹","rest 🇻🇮","see 🇻🇹","set out 🇻🇮","show 🇻🇹","show 🇻🇹","sprout 🇻🇮","stand 🇻🇮","stand up 🇻🇮","watch 🇻🇹"]; shuffle(janai);
+var stat=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat2=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat3=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var w=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]; shuffle(w); var i = 0;var tumblr = -1; var right = 0; var chosen = 1; var current; var tails=[0,1];
+
+var romaji=["agaru","jōshō","dekiru","umareru","tariru","mieru","naru","aku","orosu","deru","shuppatsu","kudaru","mitsukeru","hairu","miidasu","sagaru","gaishutsu","tewatasu","okoru","shōzuru","tetsudau","dasu","manabu","narau","ireru","ageru","mochiageru","ikiru","sageru","kizuku","kidoru","tateru","yasumu","miru","dekakeru","shimesu","miseru","haeru","tatsu","tachiagaru","miharu"];
+
+var tips=["Verb tip#1 Negative<br>Replace the verb ending ます with ません to negate it.","Verb tip#2 Past<br>Replace the verb ending ます with ました when talking about past.","Verb tip#3 ください<br>ください is a polite phrase used to request someone to give you something. <br>You can add ください to a verb in the て-form to politely ask someone to do something.","Verb tip#4 Nominalizers<br>You can add の or こと after a plain-form verb construction to turn into a noun phrase. <br>A noun contruction, on the other hand, would require either である + こと or な + の modification. ","Verb tip#5 When not to nominalize with の<br>You should only use こと when your statement ends with だ / です or when verbs in it imply <br>a communication or internal thoughts. One would assume an intransitivity of the verb + certainty <br>of a statement plays a part in it.","Verb tip#6 When not to nominalize with こと<br>You should only use の with perception verbs like 聞く or 見る, verbs that are 止める and 止める or <br>verbs that are 手伝う, 待つ and alike. One would assume a transitivity of the verb + uncertainty <br>of a situation plays a part in it."]; var tip;
+
+setit();
+	
+</script>
+</body>
+
+</html>
+
