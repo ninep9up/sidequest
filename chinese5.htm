@@ -1,0 +1,131 @@
+<html>
+
+<head>
+		
+<style type="text/css">
+body{background-color: #cfcfcf; color: #413635; text-align: center; transition: all 0.5s}
+rt{ruby-align: center; font-size:1.7vh; color: #5d5d5d; margin-bottom: -0.7vh; -webkit-text-stroke: 0vh}
+body.green{color: #325a23; background-color: #b0bd93;}
+body.red{color: #7d3326; background-color: #bdb093; }
+.tails{display:none !important}
+.untails{display:contents !important}
+</style>
+</head>
+
+<body>
+<div id="romaji" class="tails" style="margin-top: 17.1vh; font-family: serif; font-size:5.1vw; -webkit-text-stroke: 0.23vh currentcolor; letter-spacing: 0.15vw;"></div>
+<div id="yomi" style="margin-top: 17.1vh; font-family: serif; font-size:5.1vw; -webkit-text-stroke: 0vh currentcolor; letter-spacing: 0.15vw">Китайский язык</div><audio id="sound" src=''></audio>
+<div id="kanj" style="margin-top: -1.25vw; font-family:'SimSun', serif; color: #18181d; font-size:12.1vw; -webkit-text-stroke: 0vh currentcolor; ">5 класс</div>
+<div id="draw" style="margin-top: -0.81vw; min-height:2.4vh; font-size:2.4vh; -webkit-text-stroke: 0vh">Словарный тест</div>
+<div id="0" style="font-size:4.1vh; -webkit-text-stroke: 0vh; display:inline-block; padding-right:5%; padding-left:5%">⇦⇨　Выбор ответа</div>
+<div id="1" style="font-size:4.1vh; -webkit-text-stroke: 0vh; display:inline-block; padding-right:5%; padding-left:5%">⇨　Следующее слово</div>
+<div id="tip" style="padding-top: 121px; color: #18181d; -webkit-text-stroke: 0vh; font-size:3.1vh; opacity: 0.5">240 слов, для большинства иероглифов проигрываются аудиофайлы.<br> После прохождения указываются точность и слова, на которые были даны неверные ответы.</div>
+
+<script>function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;}}
+
+
+function setit(){if (chosen != 0 && i<w.length){
+document.addEventListener('keydown', function(event){
+
+var pressed = event.key; 
+if (pressed === 'ArrowRight' && chosen != 0) {
+
+current = w[i];
+document.getElementById('romaji').textContent = romaji[current];
+document.getElementById('yomi').textContent = yomi[current];
+document.getElementById('kanj').textContent = kanj[current];
+
+document.body.className = '';
+document.getElementById('0').className = '';
+document.getElementById('1').className = '';
+document.getElementById('draw').textContent = '⠀';
+console.log('Styles stripped');
+	
+tails=[0,1];
+shuffle(tails); 
+
+tip = tips[Math.floor(Math.random() * tips.length)];
+document.getElementById('tip').innerHTML = i+1+"/"+w.length;
+document.getElementById(tails[0]).textContent = desu[current];
+document.getElementById(tails[1]).textContent = janai[current]; console.log('Styles for step '+i+' are set'); kickit()
+}});}
+
+}
+
+		
+function kickit(){chosen = 0;
+
+if(i==w.length){document.getElementById('0').textContent = ''; document.getElementById('tip').textContent = '';
+for (i=0; i<w.length; i++){if (stat[i]!=""){document.getElementById('0').innerHTML+="　<ruby>"+stat[i]+"<rt>"+stat2[i]+"</rt></ruby>&nbsp;"+stat3[i]}};
+document.getElementById('yomi').textContent = 'Точность'; document.getElementById('romaji').textContent = 'Точность';
+document.getElementById('kanj').textContent = (parseFloat(right/w.length*100).toFixed(2))+'%'}
+
+if (chosen == 0 && i<w.length) {
+	
+	console.log('i='+i); var i2=i;
+	
+	document.getElementById('sound').src='../Chinese/mp3/'+kanj[w[i]]+'.mp3'; 
+	console.log(sound); document.getElementById('sound').play();
+	
+	if (desu[current] == janai[current]){
+	document.body.className = 'green'; chosen = 1; 
+	document.getElementById('draw').textContent = "☘　Счастливое совпадение (считается за правильный ответ)";
+	right++; i++; setit();}else{
+	
+	var listener = function(event){
+		var pressed2 = event.key; 
+		
+		if (pressed2 === 'ArrowUp') {document.getElementById('sound').play();}
+	
+		if (pressed2 === 'ArrowLeft' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowLeft' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 0 && chosen != 1) {
+		document.body.className = 'red'; document.getElementById('draw').textContent = "🗙"; stat[i]=kanj[w[i]]; stat2[i]=yomi[w[i]]; stat3[i]=desu[w[i]];
+		document.getElementById('1').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }
+		
+		if (pressed2 === 'ArrowRight' && tails[0] == 1 && chosen != 1) {
+		document.body.className = 'green'; document.getElementById('draw').textContent = "✔"; right++;
+		document.getElementById('0').className = 'tails'; 
+		i++; console.log('i='+i+' i2='+i2); document.removeEventListener('keydown', listener); if (i>i2) {chosen=1; console.log('is chosen '+chosen);}; }}
+
+	document.addEventListener('keydown', listener);
+	}; 
+	
+	}
+	
+	
+	
+	setit();}
+
+var kanj=['你','好','老师','同学','们','早','晚','上','早上','晚上','我','叫','她','是','他','你们','见','没','没事','明','明天','事','天','再','再见','谢谢','不客气','什么','名字','见','她们','学生','吗','不','校','长','校长','他们','的','我的','朋友','我们','中','中学生','包','笔','对','盒','机','具','铅','钱','铅笔','钱包','谁','谁的','手','手机','书','文','文具','文具盒','橡皮','这','教练','也','打','羽毛球','篮球','八','棒','棒球','冰','冰球','二','九','六','排','排球','乒乓球','七','球','三','十','四','网','网球','五','一','有','爸爸','啊','和','都','学','汉语','法','语','俄语','日语','书包','西班牙语','眼镜','英语','几','张','中文','光盘','这','那','多少','没有','笔记本','电话','电话号码','个','号码','画儿','两','鼠标','文件夹','照片','纸','祝','生日','快乐','您','找','在','这里','哪里','知','知道','今天','很','高兴','跟','一起','吃','蛋糕','听','音乐','大家','爱','比萨饼','米饭','热','巧克力','新','你多大','岁','妹妹','小学生','弟弟','哥哥','姐姐','姥姥','姥爷','妈妈','爷爷','来','姓','呢','欢迎','家','玩','北京','窗口','得','俄罗斯','法国','飞进','分别','好像','蝴蝶','久','邻居','能','思念','太','停留','学校','已经','意大利','英国','只','做','住','店员','喂','比萨饼','商','店','请问','要','份','号','马上','到','百','杯','高尔基','咖啡','块','莫斯科','南京东路','牛排','沙拉','上海','手表','王府井大街','口','人','大','只','狗','它','漂亮','还','小','猫','医生','奶奶','喜欢','邻居','可是','它们','工程师','工人','工作','经理','记者','秘书','踢','踢足球','推销员','有人','长得','职员','足球'];
+var yomi=['nǐ','hǎo','lǎo shī','tóng xué','men','zǎo','wǎn','shàng','zǎo shang','wǎn shang','wǒ','jiào','tā','shì','tā','nǐ men','jiàn','méi','méi shì','míng','míng tiān','shì','tiān','zài','zài jiàn','xiè xie','bú kè qi','shén me','míng zi','jiàn','tā men','xué sheng','ma','bù','xiào','cháng','xiào zhǎng','tā men','de','wǒ de','péng you','wǒ men','zhōng','zhōng xué shēng','bāo','bǐ','duì','hé','jī','jù','qiān','qián','qiān bǐ','qián bāo','shéi','shéide','shǒu','shǒu jī','shū','wén','wén jù','wén jù hé','xiàng pí','zhè','jiào liàn','yě','dǎ','yǔ máo qiú','lán qiú','bā','bàng','bàng qiú','bīng','bīng qiú','èr','jiǔ','liù','pái','pái qiú','pīng pāng qiú','qī','qiú','sān','shí','sì','wǎng','wǎng qiú','wǔ','yī','yǒu','bà ba','ā','hé','dōu','xué','hàn yǔ','fǎ','yǔ','É yǔ','rì yǔ','shū bāo','xī bān yá yǔ','yǎn jìng','yīng yǔ','jǐ','zhāng','zhōng wén','guāng pán','zhè','nà','duō shǎo','méi yǒu','bǐ jì běn','diàn huà','diàn huà hào mǎ','gè','hào mǎ','huà r','liǎng','shǔ biāo','wén jiàn jiā','zhào piàn','zhǐ','zhù','shēng rì','kuài lè','nín','zhǎo','zài','zhè lǐ','nǎ lǐ','zhī','zhī dào','jīn tiān','hěn','gāo xìng','gēn','yì qǐ','chī','dàn gāo','tīng','yīn yuè','dà jiā','ài','bǐ sà bǐng','mǐ fàn','rè','qiǎo kè lì','xīn','nĭ duō dà','suì','mèi mei','xiǎo xué shēng','dì di','gē ge','jiě jie','lǎo lao','lǎo ye','mā ma','yé ye','lái','xìng','ne','huān yíng','jiā','wán','běi jīng','chuāng kǒu','dé','É luó sī','fǎ guó','fēi jìn','fēn bié','hǎo xiàng','hú dié','jiǔ','lín jū','néng','sī niàn','tài','tíng liú','xué xiào','yǐ jīng','yì dà lì','yīng guó','zhǐ','zuò','zhù','diàn yuán','wèi','bǐ sà bǐng','shāng','diàn','qǐng wèn','yào','fèn','hào','mǎ shàng','dào','bǎi','bēi','gāo ěr jī','kā fēi','kuài','mò sī kē','nán jīng dōng lù','niú pái','shā lā','shàng hǎi','shǒu biǎo','wáng fǔ jǐng dà jiē','kǒu','rén','dà','zhǐ','gǒu','tā','piào liang','hái','xiǎo','māo','yī shēng','nǎi nai','xǐ huan','lín jū','kě shì','tā men','gōng chéng shī','gōng rén','gōng zuò','jīng lǐ','jì zhě','mì shū','tī','tī zú qiú','tuī xiāo yuán','yǒu rén','zhǎng de','zhí yuán','zú qiú'];
+var desu=['ты','хорошо','учитель','товарищ','мы','рано','поздно','вверх','утро','вечер','я','звать','она','да','он','вы','видеть','не (глаг.)','ничего','ясный','завтра','дело, работа','день','снова','До свидания!','Спасибо!','Пожалуйста!','что','имя','видеть','они (жен.)','ученик','да','не','школа','старший','директор школы','они (муж.)','(суф. прил.)','мой','друг','мы','средний','школьник','сумка','кисть','правильно','коробка','машина','полностью','графит','деньги','карандаш','кошелек','кто','чей','рука','мобильный телефон','книга','литературный','канцелярские принадлежности','пенал','ластик','это','тренер','тоже','бить','бадминтон','баскетбол','восемь','бита','бейсбол','лед','хоккей','два','девять','шесть','ряд','волейбол','пинг-понг','семь','мяч','три','десять','четыре','сеть','теннис','пять','один','есть','папа','а?','спокойный','столица','учёба','китайский язык','закон','язык','русский язык','японский язык','сумка','испанский язык','очки','английский язык','несколько','раскрывать','китайский язык','компакт-диск','это, этот','то, тот','сколько','нет, без-','тетрадь','телефон','телефонный номер','шт.','число, номер','рисунок','два','мышь (комп.)','папка','фото','бумага','поздравлять','день рождения','радость','Вы','искать','жить, быть','тут','где','понимать','знать','сегодня','очень','рад','следовать','вместе','есть','торт','слушать','музыка','все','любить','пицца','рис','горячий','шоколад','новый','сколько тебе лет?','год','сестра','младший школьник','младший брат','старший брат','старшая сестра','бабушка (по матери)','дед (по матери)','мама','дед (по отцу)','приходить','фамилия','ведь','приветствовать','жилище','играть','Пекин','окно','получать','Россия','Франция','влететь','разница','как будто','бабочка','долго','сосед','мочь','вспоминать','слишком','останавливаться','школа','уже','Италия','Англия','только','делать','проживать','продавец','кормить','пицца','купец','магазин','Позвольте спросить','хотеть','порция','номер','сейчас','доходить','сто','чашка','Горький','кофе','кусок','Москва','Восточная улица Нанкина','бифштекс','салат','Шанхай','часы','улица Ванфуцзин','рот','человек','большой','только','собака','оно','красивый','ещё','маленький','кошка','врач','бабушка (по отцу)','веселый, нравиться','сосед','но','они (жив. и пред.)','инженер','рабочий','работа','директор','журналист','секретарь','пинать','играть в футбол','продавец','кто-то','вырасти','служащий','футбол'];
+var janai=['ты','хорошо','учитель','товарищ','мы','рано','поздно','вверх','утро','вечер','я','звать','она','да','он','вы','видеть','не (глаг.)','ничего','ясный','завтра','дело, работа','день','снова','До свидания!','Спасибо!','Пожалуйста!','что','имя','видеть','они (жен.)','ученик','да','не','школа','старший','директор школы','они (муж.)','(суф. прил.)','мой','друг','мы','средний','школьник','сумка','кисть','правильно','коробка','машина','полностью','графит','деньги','карандаш','кошелек','кто','чей','рука','мобильный телефон','книга','литературный','канцелярские принадлежности','пенал','ластик','это','тренер','тоже','бить','бадминтон','баскетбол','восемь','бита','бейсбол','лед','хоккей','два','девять','шесть','ряд','волейбол','пинг-понг','семь','мяч','три','десять','четыре','сеть','теннис','пять','один','есть','папа','а?','спокойный','столица','учёба','китайский язык','закон','язык','русский язык','японский язык','сумка','испанский язык','очки','английский язык','несколько','раскрывать','китайский язык','компакт-диск','это, этот','то, тот','сколько','нет, без-','тетрадь','телефон','телефонный номер','шт.','число, номер','рисунок','два','мышь (комп.)','папка','фото','бумага','поздравлять','день рождения','радость','Вы','искать','жить, быть','тут','где','понимать','знать','сегодня','очень','рад','следовать','вместе','есть','торт','слушать','музыка','все','любить','пицца','рис','горячий','шоколад','новый','сколько тебе лет?','год','сестра','младший школьник','младший брат','старший брат','старшая сестра','бабушка (по матери)','дед (по матери)','мама','дед (по отцу)','приходить','фамилия','ведь','приветствовать','жилище','играть','Пекин','окно','получать','Россия','Франция','влететь','разница','как будто','бабочка','долго','сосед','мочь','вспоминать','слишком','останавливаться','школа','уже','Италия','Англия','только','делать','проживать','продавец','кормить','пицца','купец','магазин','Позвольте спросить','хотеть','порция','номер','сейчас','доходить','сто','чашка','Горький','кофе','кусок','Москва','Восточная улица Нанкина','бифштекс','салат','Шанхай','часы','улица Ванфуцзин','рот','человек','большой','только','собака','оно','красивый','ещё','маленький','кошка','врач','бабушка (по отцу)','веселый, нравиться','сосед','но','они (жив. и пред.)','инженер','рабочий','работа','директор','журналист','секретарь','пинать','играть в футбол','продавец','кто-то','вырасти','служащий','футбол']; shuffle(janai);
+var stat=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat2=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var stat3=["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+var w=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239]; shuffle(w); var i = 0;var tumblr = -1; var right = 0; var chosen = 1; var current; var tails=[0,1];
+
+var tips=["Counting tip#1 (People)<br>Use 人 (にん) to count people.<br> Except for 1 (ひとり) and 2 (ふたり), all of the other numbers used to count people end in 人 (にん).","Counting tip#2 (Machines)<br>Use 台 (だい) to count cars and other machines such as computers, televisions, and appliances.","Counting tip#3 (Books)<br>Use 冊 (さつ) to count books and other bound objects, such as magazines.<br> For 1 say いっさつ.","Counting tip#4 (Cups)<br>Use 杯 (はい) to count liquid in cups, glasses, and bowls.<br> For 1 say いっぱい, for 3 - さんばい, for 6 - ろっぱい, for 8 - はっぱい.","Counting tip#5 (Floors)<br>Use 階 (かい) to count the floors of a building.<br> For 1 say いっかい, for 6 - ろっかい.","Counting tip#6 (Seconds to hours)<br>Use 秒 (びょう) to count seconds and 時間 (じかん) to count hours.<br> ","Counting tip#7 (7 Special)<br>Use しち for July (しちがつ) and 7 hours o'clock (しちじ).","Counting tip#8 (Weeks)<br>Use 週間 (しゅうかん) to count weeks.<br> For 1 say いっしゅうかん, for 8 - はしゅうかん.","Counting tip#9 (Months)<br>Use ヶ月 (かげつ) to count months.<br> For 1 say いっかげつ, for 6 - ろっかげつ, for 8 - はっかげつ.","Counting tip#10 (Years)<br>Use 年間 (ねんかん) to count years.","Counting tip#11 (Buildings)<br>Use 軒 (けん) to count houses and other buildings.<br> For 1 say いっけん, for 3 - さんげん.","Counting tip#12 (Small objects)<br>Use 個 (こ) to count a wide variety of things such as apples, eggs, and other small compact objects.<br> For 1 say いっこ, for 6 - ろっこ, for 8 - はっこ.","Counting tip#13 (Rabbids and birds)<br>Use 羽 (わ) to count birds and rabbits.<br> ","Counting tip#14 (Small animals)<br>Use 匹 (ひき / ぴき / びき) to count small animals.<br> For 1 say いっぴき, for 3 - さんびき, for 6 - ろっぴき, for 8 - はっぴき, for 10 - じゅっぴき.","Counting tip#15 (Large animals)<br>Use 頭 (とう) to count large animals such as horses, cows, or elephants.<br> For 1 say いっとう, for 8 - はっとう.","Counting tip#16 (Long objects)<br>Use 本 (ほん / ぽん / ぼん) to count long, cylindrical objects (pens, neckties, trees).<br> For 1 say いっぽん, for 3 - さんぼん, for 6 - ろっぽん, for 8 - はっぽん, for 10 - じゅっぽん.","Counting tip#17 (Flat objects)<br>Use 枚 (まい) to count thin, flat objects (sheets of paper, postage stamps, plates)."]; var tip;
+
+setit();
+	
+</script>
+</body>
+
+</html>
+
